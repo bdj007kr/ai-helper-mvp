@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 const FOLLOW_UPS = [
-  {
-    label: "💡 빠져나갈 구멍은 없을까?",
-    prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?"
-  },
-  {
-    label: "📚 비슷한 사건 더 알려줘",
-    prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘."
-  },
-  {
-    label: "⚖️ 변호사 추천해줘",
-    prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?"
-  }
+  { label: "💡 빠져나갈 구멍은 없을까?", prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?" },
+  { label: "📚 비슷한 사건 더 알려줘", prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘." },
+  { label: "⚖️ 변호사 추천해줘", prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?" }
 ];
 
 const App = () => {
@@ -35,25 +26,16 @@ const App = () => {
     setIsLoading(true);
     setUserInput("");
 
-    if (!initialQuestion) {
-      setInitialQuestion(content); // 첫 질문 저장
-    }
+    if (!initialQuestion) setInitialQuestion(content);
 
-    const messages = [
-      ...history,
-      { role: "user", content }
-    ];
+    const messages = [...history, { role: "user", content }];
 
     try {
       const response = await fetch("http://127.0.0.1:8000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_input: content,
-          context: initialQuestion
-        }),
+        body: JSON.stringify({ user_input: content, context: initialQuestion })
       });
-
       const data = await response.json();
       let index = 0;
       setAiResponse("");
@@ -101,11 +83,7 @@ const App = () => {
           <p style={styles.responseText}>{aiResponse}</p>
           <div style={styles.buttonGroup}>
             {FOLLOW_UPS.map(({ label, prompt }, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSubmit(prompt)}
-                style={styles.followUpButton}
-              >
+              <button key={idx} onClick={() => handleSubmit(prompt)} style={styles.followUpButton}>
                 {label}
               </button>
             ))}
@@ -125,62 +103,63 @@ const App = () => {
 const styles = {
   container: {
     minHeight: "100vh",
-    backgroundColor: "#f9fafb",
+    backgroundColor: "#fefefe",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "24px 16px",
-    fontFamily: "'Pretendard', 'Apple SD Gothic Neo', sans-serif",
+    fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
   },
   title: {
     fontSize: "22px",
     fontWeight: "700",
     marginBottom: "20px",
-    color: "#1f2937",
+    color: "#222",
   },
   textarea: {
     width: "100%",
-    maxWidth: "540px",
-    padding: "14px",
+    maxWidth: "500px",
+    padding: "16px",
     fontSize: "15px",
-    borderRadius: "10px",
-    border: "1px solid #d1d5db",
-    marginBottom: "14px",
+    borderRadius: "12px",
+    border: "1px solid #ccc",
+    marginBottom: "16px",
     backgroundColor: "#fff",
-    color: "#111827",
+    color: "#222",
     resize: "vertical",
     boxSizing: "border-box",
+    fontFamily: "inherit",
   },
   button: {
     backgroundColor: "#2563eb",
     color: "#fff",
-    fontSize: "15px",
-    padding: "10px 20px",
+    fontSize: "16px",
+    padding: "12px 24px",
     border: "none",
-    borderRadius: "10px",
+    borderRadius: "12px",
     cursor: "pointer",
-    transition: "background-color 0.2s ease",
+    transition: "0.2s ease",
     marginBottom: "24px",
-    boxShadow: "0 2px 8px rgba(37, 99, 235, 0.15)",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   },
   responseBox: {
-    backgroundColor: "#ffffff",
-    border: "1px solid #e5e7eb",
+    backgroundColor: "#fff",
+    border: "1px solid #e0e0e0",
     borderRadius: "12px",
     padding: "18px",
-    maxWidth: "540px",
+    maxWidth: "500px",
     width: "100%",
     boxSizing: "border-box",
   },
   responseLabel: {
     fontWeight: "600",
-    marginBottom: "10px",
-    color: "#111827",
+    marginBottom: "12px",
+    color: "#1e1e1e",
   },
   responseText: {
     fontSize: "15px",
     lineHeight: "1.6",
-    color: "#374151",
+    color: "#333",
     marginBottom: "12px",
   },
   buttonGroup: {
@@ -189,19 +168,19 @@ const styles = {
     gap: "10px",
   },
   followUpButton: {
-    padding: "10px",
+    padding: "10px 14px",
     backgroundColor: "#f3f4f6",
-    border: "1px solid #d1d5db",
-    borderRadius: "8px",
+    border: "1px solid #ddd",
+    borderRadius: "10px",
     fontSize: "14px",
     cursor: "pointer",
     textAlign: "left",
-    color: "#1f2937",
+    color: "#111",
   },
   resetButton: {
-    marginTop: "16px",
+    marginTop: "20px",
     fontSize: "14px",
-    color: "#4b5563",
+    color: "#666",
     backgroundColor: "transparent",
     border: "none",
     textDecoration: "underline",
