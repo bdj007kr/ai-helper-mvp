@@ -82,11 +82,27 @@ const App = () => {
           <p style={styles.responseLabel}>🧑‍⚖️ AI 조언</p>
           <p style={styles.responseText}>{aiResponse}</p>
           <div style={styles.buttonGroup}>
-            {FOLLOW_UPS.map(({ label, prompt }, idx) => (
-              <button key={idx} onClick={() => handleSubmit(prompt)} style={styles.followUpButton}>
-                {label}
-              </button>
-            ))}
+            {FOLLOW_UPS.map(({ label, prompt }, idx) => {
+              if (label === "⚖️ 변호사 추천해줘") {
+                return (
+                  <a
+                    key={idx}
+                    href="http://korea-lawyer.com/new_html_file.php?file=new_member_ranking.html&file2=new_default_member_ranking.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={styles.followUpButton}
+                  >
+                    {label}
+                  </a>
+                );
+              } else {
+                return (
+                  <button key={idx} onClick={() => handleSubmit(prompt)} style={styles.followUpButton}>
+                    {label}
+                  </button>
+                );
+              }
+            })}
           </div>
         </div>
       )}
@@ -103,18 +119,18 @@ const App = () => {
 const styles = {
   container: {
     minHeight: "100vh",
-    backgroundColor: "#fefefe",
+    backgroundColor: "#f9fafb",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "24px 16px",
-    fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
+    fontFamily: "'Noto Sans KR', sans-serif",
   },
   title: {
     fontSize: "22px",
     fontWeight: "700",
     marginBottom: "20px",
-    color: "#222",
+    color: "#1f2937",
   },
   textarea: {
     width: "100%",
@@ -125,7 +141,7 @@ const styles = {
     border: "1px solid #ccc",
     marginBottom: "16px",
     backgroundColor: "#fff",
-    color: "#222",
+    color: "#111",
     resize: "vertical",
     boxSizing: "border-box",
     fontFamily: "inherit",
@@ -138,49 +154,52 @@ const styles = {
     border: "none",
     borderRadius: "12px",
     cursor: "pointer",
-    transition: "0.2s ease",
     marginBottom: "24px",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
   responseBox: {
-    backgroundColor: "#fff",
-    border: "1px solid #e0e0e0",
-    borderRadius: "12px",
-    padding: "18px",
+    backgroundColor: "#ffffff",
+    border: "1px solid #e5e7eb",
+    borderRadius: "16px",
+    padding: "20px",
     maxWidth: "500px",
     width: "100%",
     boxSizing: "border-box",
+    marginBottom: "16px",
+    whiteSpace: "pre-wrap",
   },
   responseLabel: {
     fontWeight: "600",
     marginBottom: "12px",
-    color: "#1e1e1e",
+    fontSize: "16px",
+    color: "#111827",
   },
   responseText: {
     fontSize: "15px",
-    lineHeight: "1.6",
+    lineHeight: "1.7",
     color: "#333",
     marginBottom: "12px",
   },
   buttonGroup: {
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
+    gap: "12px",
   },
   followUpButton: {
-    padding: "10px 14px",
+    padding: "12px 16px",
     backgroundColor: "#f3f4f6",
     border: "1px solid #ddd",
-    borderRadius: "10px",
-    fontSize: "14px",
+    borderRadius: "12px",
+    fontSize: "15px",
     cursor: "pointer",
     textAlign: "left",
     color: "#111",
+    boxShadow: "inset 0 1px 0 #fff",
   },
   resetButton: {
     marginTop: "20px",
     fontSize: "14px",
-    color: "#666",
+    color: "#6b7280",
     backgroundColor: "transparent",
     border: "none",
     textDecoration: "underline",
