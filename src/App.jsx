@@ -66,7 +66,7 @@ const App = () => {
       <h1 style={styles.title}>⚖️ 법률 상담 도우미</h1>
 
       <textarea
-        placeholder="당한 상황이나 궁금한 점을 자세히 적어주세요"
+        placeholder="자세히 적어주실수록 더 정확한 조언을 드릴 수 있어요."
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
         rows={4}
@@ -74,7 +74,7 @@ const App = () => {
       />
 
       <button onClick={() => handleSubmit()} disabled={isLoading} style={styles.button}>
-        {isLoading ? "생각 중..." : "질문하기"}
+        {isLoading ? "🧠 생각 중..." : "질문하기"}
       </button>
 
       {aiResponse && (
