@@ -11,12 +11,6 @@ const FOLLOW_UPS = [
     prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘.",
     external: false,
   },
-  {
-    label: "⚖️ 변호사 추천해줘",
-    prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?",
-    external: true,
-    url: "http://korea-lawyer.com/new_html_file.php?file=new_member_ranking.html&file2=new_default_member_ranking.html",
-  },
 ];
 
 const App = () => {
@@ -62,17 +56,20 @@ const App = () => {
 
   const handleFollowUpClick = (item) => {
     if (isLoading) return;
-    if (item.external && item.url) {
-      window.open(item.url, "_blank");
-    } else {
-      handleSubmit(item.prompt);
-    }
+    handleSubmit(item.prompt);
   };
 
   const resetConversation = () => {
     setInitialQuestion(null);
     setHistory([]);
     setAiResponse("");
+  };
+
+  const handleLawyerLink = () => {
+    window.open(
+      "http://korea-lawyer.com/new_html_file.php?file=new_member_ranking.html&file2=new_default_member_ranking.html",
+      "_blank"
+    );
   };
 
   return (
@@ -123,6 +120,10 @@ const App = () => {
           🔄 새 사건 시작하기
         </button>
       )}
+
+      <button onClick={handleLawyerLink} style={styles.lawyerLinkButton}>
+        👩‍⚖️ 변호사 쉽게 모아보기
+      </button>
     </div>
   );
 };
@@ -216,6 +217,17 @@ const styles = {
     border: "none",
     textDecoration: "underline",
     cursor: "pointer",
+  },
+  lawyerLinkButton: {
+    marginTop: "30px",
+    fontSize: "15px",
+    backgroundColor: "#10b981",
+    color: "#fff",
+    padding: "14px 20px",
+    borderRadius: "12px",
+    border: "none",
+    cursor: "pointer",
+    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 };
 
