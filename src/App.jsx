@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from "react";
 
 const FOLLOW_UPS = [
-  { label: "💡 빠져나갈 구멍은 없을까?", prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?" },
-  { label: "📚 비슷한 사건 더 알려줘", prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘." },
-  { label: "⚖️ 변호사 추천해줘", prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?" }
+  {
+    label: "💡 빠져나갈 구멍은 없을까?",
+    prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?",
+    external: false,
+  },
+  {
+    label: "📚 비슷한 사건 더 알려줘",
+    prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘.",
+    external: false,
+  },
+  {
+    label: "⚖️ 변호사 추천해줘",
+    prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?",
+    external: true,
+    url: "http://korea-lawyer.com/new_html_file.php?file=new_member_ranking.html&file2=new_default_member_ranking.html",
+  },
 ];
 
 const App = () => {
@@ -34,24 +47,25 @@ const App = () => {
       const response = await fetch("https://ai-helper-mvp.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_input: content, context: initialQuestion })
+        body: JSON.stringify({ user_input: content, context: initialQuestion }),
       });
       const data = await response.json();
-      let index = 0;
-      setAiResponse("");
-
-      const interval = setInterval(() => {
-        setAiResponse((prev) => prev + data.response.charAt(index));
-        index++;
-        if (index >= data.response.length) clearInterval(interval);
-      }, 30);
-
+      setAiResponse(data.response);
       setHistory([...messages, { role: "assistant", content: data.response }]);
     } catch (error) {
       console.error("Error:", error);
       setAiResponse("문제가 발생했어요.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleFollowUpClick = (item) => {
+    if (isLoading) return;
+    if (item.external && item.url) {
+      window.open(item.url, "_blank");
+    } else {
+      handleSubmit(item.prompt);
     }
   };
 
@@ -66,15 +80,19 @@ const App = () => {
       <h1 style={styles.title}>⚖️ 법률 상담 도우미</h1>
 
       <textarea
-        placeholder="자세히 적어주실수록 더 정확한 조언을 드릴 수 있어요."
+        placeholder="자세히 이야기할수록 더 정확한 조언을 받을 수 있어요"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
         rows={4}
         style={styles.textarea}
       />
 
-      <button onClick={() => handleSubmit()} disabled={isLoading} style={styles.button}>
-        {isLoading ? "🧠 생각 중..." : "질문하기"}
+      <button
+        onClick={() => handleSubmit()}
+        disabled={isLoading}
+        style={{ ...styles.button, opacity: isLoading ? 0.5 : 1 }}
+      >
+        {isLoading ? "생각 중..." : "질문하기"}
       </button>
 
       {aiResponse && (
@@ -82,27 +100,20 @@ const App = () => {
           <p style={styles.responseLabel}>🧑‍⚖️ AI 조언</p>
           <p style={styles.responseText}>{aiResponse}</p>
           <div style={styles.buttonGroup}>
-            {FOLLOW_UPS.map(({ label, prompt }, idx) => {
-              if (label === "⚖️ 변호사 추천해줘") {
-                return (
-                  <a
-                    key={idx}
-                    href="http://korea-lawyer.com/new_html_file.php?file=new_member_ranking.html&file2=new_default_member_ranking.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={styles.followUpButton}
-                  >
-                    {label}
-                  </a>
-                );
-              } else {
-                return (
-                  <button key={idx} onClick={() => handleSubmit(prompt)} style={styles.followUpButton}>
-                    {label}
-                  </button>
-                );
-              }
-            })}
+            {FOLLOW_UPS.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleFollowUpClick(item)}
+                disabled={isLoading}
+                style={{
+                  ...styles.followUpButton,
+                  opacity: isLoading ? 0.6 : 1,
+                  pointerEvents: isLoading ? "none" : "auto",
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
         </div>
       )}
@@ -195,6 +206,7 @@ const styles = {
     textAlign: "left",
     color: "#111",
     boxShadow: "inset 0 1px 0 #fff",
+    transition: "all 0.2s ease",
   },
   resetButton: {
     marginTop: "20px",
