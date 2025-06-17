@@ -17,7 +17,7 @@ app = FastAPI()
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ai-helper-mvp.vercel.app"], # Vercel 주소
+    allow_origins=["https://ai-helper-mvp-neen.vercel.app"], # Vercel 주소
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
