@@ -78,9 +78,16 @@ const App = () => {
       </button>
 
       {aiResponse && (
-        <div style={styles.responseBox}>
-          <p style={styles.responseLabel}>🧑‍⚖️ AI 조언</p>
-          <p style={styles.responseText}>{aiResponse}</p>
+  <div style={styles.responseBox}>
+    {initialQuestion && (
+      <div style={styles.userQuestion}>
+        <p style={styles.questionLabel}>🙋 사용자 질문</p>
+        <p style={styles.questionText}>{initialQuestion}</p>
+      </div>
+    )}
+
+    <p style={styles.responseLabel}>🧑‍⚖️ AI 조언</p>
+    <p style={styles.responseText}>{aiResponse}</p>
           <div style={styles.buttonGroup}>
             {FOLLOW_UPS.map(({ label, prompt }, idx) => (
               <button key={idx} onClick={() => handleSubmit(prompt)} style={styles.followUpButton}>
@@ -158,7 +165,25 @@ const styles = {
     width: "100%",
     margin: "0 auto", // ✅ 가운데 정렬 추가
     boxSizing: "border-box",
-  },
+  },// 여기수정
+  userQuestion: {
+  marginBottom: "16px",
+  padding: "12px",
+  backgroundColor: "#f9f9f9",
+  borderRadius: "10px",
+  border: "1px solid #ddd",
+},
+questionLabel: {
+  fontWeight: "600",
+  marginBottom: "8px",
+  color: "#333",
+},
+questionText: {
+  fontSize: "15px",
+  color: "#111",
+  whiteSpace: "pre-wrap",
+},
+
   responseLabel: {
     fontWeight: "600",
     marginBottom: "12px",
