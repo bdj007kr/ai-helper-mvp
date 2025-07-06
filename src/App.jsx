@@ -31,7 +31,7 @@ const App = () => {
     const messages = [...history, { role: "user", content }];
 
     try {
-      const response = await fetch("https://ai-helper-api-2025.onrender.com/chat", {
+      const response = await fetch("https://ai-helper-mvp.onrender.com/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ user_input: content, context: initialQuestion })
