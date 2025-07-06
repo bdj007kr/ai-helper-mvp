@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const FOLLOW_UPS = [
-  { label: "💡 빠져나갈 구멍은 없을까?", prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?" },
-  { label: "💰 AI 추천 합의금", prompt: "형사사건에서 이 사건의 합의금은 얼마 정도가 적절할까요?" },
-  { label: "📚 비슷한 사건 더 알려줘", prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘." },
-  { label: "⚖️ 변호사 추천해줘", prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?" }
+  { label: "💡 빠진아가가루머은 없을까?", prompt: "이 상황에서 허의를 피할 수 있는 전력이 있을까요?" },
+  { label: "💰 AI 추천 합의금", prompt: "이 사건에서 합의금은 어느 정도가 적적할까요?" },
+  { label: "📚 비슷한 사건 더 알려줘", prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘요." },
+  { label: "⚖️ 변호사 추천해줘", prompt: "이러한 사건을 잘 다룰 수 있는 변호사 유형은 어느가요?" }
 ];
 
 const App = () => {
@@ -17,13 +17,15 @@ const App = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const typingIntervalRef = useRef(null); // ✅ 타이핑 인터벌 저장
+  const typingIntervalRef = useRef(null);
 
   useEffect(() => {
     sessionStorage.setItem("chatHistory", JSON.stringify(history));
   }, [history]);
 
   const handleSubmit = async (input) => {
+    if (isLoading) return; // 연타 방지
+
     if (typingIntervalRef.current) {
       clearInterval(typingIntervalRef.current);
       typingIntervalRef.current = null;
@@ -46,12 +48,13 @@ const App = () => {
       });
       const data = await response.json();
       let index = 0;
+      const fullResponse = "" + data.response; // 첫줄자 없음 해결용
       setAiResponse("");
 
       typingIntervalRef.current = setInterval(() => {
-        setAiResponse((prev) => prev + data.response.charAt(index));
+        setAiResponse((prev) => prev + fullResponse.charAt(index));
         index++;
-        if (index >= data.response.length) {
+        if (index >= fullResponse.length) {
           clearInterval(typingIntervalRef.current);
           typingIntervalRef.current = null;
         }
@@ -84,7 +87,15 @@ const App = () => {
         style={styles.textarea}
       />
 
-      <button onClick={() => handleSubmit()} disabled={isLoading} style={styles.button}>
+      <button
+        onClick={() => handleSubmit()}
+        disabled={isLoading}
+        style={{
+          ...styles.button,
+          opacity: isLoading ? 0.5 : 1,
+          pointerEvents: isLoading ? "none" : "auto"
+        }}
+      >
         {isLoading ? "생각 중..." : "질문하기"}
       </button>
 
@@ -99,9 +110,19 @@ const App = () => {
 
           <p style={styles.responseLabel}>🧑‍⚖️ AI 조언</p>
           <p style={styles.responseText}>{aiResponse}</p>
+
           <div style={styles.buttonGroup}>
             {FOLLOW_UPS.map(({ label, prompt }, idx) => (
-              <button key={idx} onClick={() => handleSubmit(prompt)} style={styles.followUpButton}>
+              <button
+                key={idx}
+                onClick={() => !isLoading && handleSubmit(prompt)}
+                disabled={isLoading}
+                style={{
+                  ...styles.followUpButton,
+                  opacity: isLoading ? 0.5 : 1,
+                  pointerEvents: isLoading ? "none" : "auto"
+                }}
+              >
                 {label}
               </button>
             ))}
