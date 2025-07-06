@@ -112,8 +112,8 @@ const styles = {
     fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
 
     // ✅ 추가된 항목들
-    width: "100%",
-    maxWidth: "480px",
+    width: "100vw",
+    maxWidth: "100vw",
     overflowX: "hidden",
     boxSizing: "border-box",
   },
@@ -125,7 +125,7 @@ const styles = {
   },
   textarea: {
     width: "100%",
-    maxWidth: "500px",
+    maxWidth: "94vw",
     padding: "16px",
     fontSize: "15px",
     borderRadius: "12px",
@@ -154,7 +154,7 @@ const styles = {
     border: "1px solid #e0e0e0",
     borderRadius: "12px",
     padding: "18px",
-    maxWidth: "500px",
+    maxWidth: "94vw",
     width: "100%",
     margin: "0 auto", // ✅ 가운데 정렬 추가
     boxSizing: "border-box",
