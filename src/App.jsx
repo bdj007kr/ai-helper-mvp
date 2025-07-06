@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 const FOLLOW_UPS = [
   { label: "💡 빠져나갈 구멍은 없을까?", prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?" },
-  { label: "💰 AI 추천 합의금", prompt: "형사사건에서 이 사건의 합의금은 얼마 정도가 적절할까요?" }
+  { label: "💰 AI 추천 합의금", prompt: "형사사건에서 이 사건의 합의금은 얼마 정도가 적절할까요?" },
   { label: "📚 비슷한 사건 더 알려줘", prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘." },
   { label: "⚖️ 변호사 추천해줘", prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?" }
 ];
