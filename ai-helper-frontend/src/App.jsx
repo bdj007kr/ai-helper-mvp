@@ -31,12 +31,11 @@ const App = () => {
     const messages = [...history, { role: "user", content }];
 
     try {
-      const response = await fetch("const response = await fetch("https://ai-helper-api-2025.onrender.com/chat", {
-", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_input: content, context: initialQuestion })
-      });
+      const response = await fetch("https://ai-helper-api-2025.onrender.com/chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ user_input: content, context: initialQuestion })
+});
       const data = await response.json();
       let index = 0;
       setAiResponse("");
