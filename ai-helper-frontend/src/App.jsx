@@ -112,8 +112,8 @@ const styles = {
     fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
 
     // ✅ 추가된 항목들
-    width: "100vw",
-    maxWidth: "100vw",
+    width: "100%",
+    maxWidth: "480px",
     overflowX: "hidden",
     boxSizing: "border-box",
   },
