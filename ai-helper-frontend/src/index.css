@@ -68,8 +68,15 @@ button:focus-visible {
 }
 /* ✅ 추가 시작 */
 html, body {
-  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
   width: 100vw;
+  height: 100vh;
+  background-color: white;
   overflow-x: hidden;
+
+  display: flex;
+  justify-content: center;   /* ✅ 가로 중앙 정렬 */
+  align-items: flex-start;   /* ✅ 세로 위쪽 정렬 */
 }
 /* ✅ 추가 끝 */
