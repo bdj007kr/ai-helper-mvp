@@ -103,12 +103,19 @@ const App = () => {
 const styles = {
   container: {
     minHeight: "100vh",
-    backgroundColor: "#fefefe",
+    backgroundColor: "#ffffff", // 배경 흰색
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "flex-start",
     padding: "24px 16px",
     fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
+
+    // ✅ 추가된 항목들
+    width: "100%",
+    maxWidth: "100vw",
+    overflowX: "hidden",
+    boxSizing: "border-box",
   },
   title: {
     fontSize: "22px",
@@ -149,6 +156,7 @@ const styles = {
     padding: "18px",
     maxWidth: "500px",
     width: "100%",
+    margin: "0 auto", // ✅ 가운데 정렬 추가
     boxSizing: "border-box",
   },
   responseLabel: {
@@ -161,6 +169,7 @@ const styles = {
     lineHeight: "1.6",
     color: "#333",
     marginBottom: "12px",
+    whiteSpace: "pre-wrap", // ✅ 줄바꿈 자연스럽게
   },
   buttonGroup: {
     display: "flex",
