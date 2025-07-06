@@ -66,3 +66,10 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+/* ✅ 추가 시작 */
+html, body {
+  background-color: #ffffff;
+  width: 100vw;
+  overflow-x: hidden;
+}
+/* ✅ 추가 끝 */
