@@ -72,7 +72,7 @@ html, body {
   padding: 0;
   width: 100vw;
   height: 100vh;
-  background-color: white;
+  background-color: #ffffff;
   overflow-x: hidden;
 
   display: flex;
