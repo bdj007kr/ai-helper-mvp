@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const FOLLOW_UPS = [
   { label: "💡 빠져나갈 구멍은 없을까?", prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?" },
+  { label: "💰 AI 추천 합의금", prompt: "형사사건에서 이 사건의 합의금은 얼마 정도가 적절할까요?" }
   { label: "📚 비슷한 사건 더 알려줘", prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘." },
   { label: "⚖️ 변호사 추천해줘", prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?" }
 ];
@@ -16,11 +17,18 @@ const App = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const typingIntervalRef = useRef(null); // ✅ 타이핑 인터벌 저장
+
   useEffect(() => {
     sessionStorage.setItem("chatHistory", JSON.stringify(history));
   }, [history]);
 
   const handleSubmit = async (input) => {
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+      typingIntervalRef.current = null;
+    }
+
     const content = input || userInput;
     if (!content.trim()) return;
     setIsLoading(true);
@@ -32,18 +40,21 @@ const App = () => {
 
     try {
       const response = await fetch("https://ai-helper-mvp.onrender.com/chat", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ user_input: content, context: initialQuestion })
-});
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_input: content, context: initialQuestion })
+      });
       const data = await response.json();
       let index = 0;
       setAiResponse("");
 
-      const interval = setInterval(() => {
+      typingIntervalRef.current = setInterval(() => {
         setAiResponse((prev) => prev + data.response.charAt(index));
         index++;
-        if (index >= data.response.length) clearInterval(interval);
+        if (index >= data.response.length) {
+          clearInterval(typingIntervalRef.current);
+          typingIntervalRef.current = null;
+        }
       }, 30);
 
       setHistory([...messages, { role: "assistant", content: data.response }]);
@@ -78,16 +89,16 @@ const App = () => {
       </button>
 
       {aiResponse && (
-  <div style={styles.responseBox}>
-    {initialQuestion && (
-      <div style={styles.userQuestion}>
-        <p style={styles.questionLabel}>🙋 사용자 질문</p>
-        <p style={styles.questionText}>{initialQuestion}</p>
-      </div>
-    )}
+        <div style={styles.responseBox}>
+          {initialQuestion && (
+            <div style={styles.userQuestion}>
+              <p style={styles.questionLabel}>🙋 사용자 질문</p>
+              <p style={styles.questionText}>{initialQuestion}</p>
+            </div>
+          )}
 
-    <p style={styles.responseLabel}>🧑‍⚖️ AI 조언</p>
-    <p style={styles.responseText}>{aiResponse}</p>
+          <p style={styles.responseLabel}>🧑‍⚖️ AI 조언</p>
+          <p style={styles.responseText}>{aiResponse}</p>
           <div style={styles.buttonGroup}>
             {FOLLOW_UPS.map(({ label, prompt }, idx) => (
               <button key={idx} onClick={() => handleSubmit(prompt)} style={styles.followUpButton}>
@@ -110,15 +121,13 @@ const App = () => {
 const styles = {
   container: {
     minHeight: "100vh",
-    backgroundColor: "#ffffff", // 배경 흰색
+    backgroundColor: "#ffffff",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
     padding: "24px 16px",
     fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
-
-    // ✅ 추가된 항목들
     width: "100vw",
     maxWidth: "100vw",
     overflowX: "hidden",
@@ -163,27 +172,26 @@ const styles = {
     padding: "18px",
     maxWidth: "94vw",
     width: "100%",
-    margin: "0 auto", // ✅ 가운데 정렬 추가
+    margin: "0 auto",
     boxSizing: "border-box",
-  },// 여기수정
+  },
   userQuestion: {
-  marginBottom: "16px",
-  padding: "12px",
-  backgroundColor: "#f9f9f9",
-  borderRadius: "10px",
-  border: "1px solid #ddd",
-},
-questionLabel: {
-  fontWeight: "600",
-  marginBottom: "8px",
-  color: "#333",
-},
-questionText: {
-  fontSize: "15px",
-  color: "#111",
-  whiteSpace: "pre-wrap",
-},
-
+    marginBottom: "16px",
+    padding: "12px",
+    backgroundColor: "#f9f9f9",
+    borderRadius: "10px",
+    border: "1px solid #ddd",
+  },
+  questionLabel: {
+    fontWeight: "600",
+    marginBottom: "8px",
+    color: "#333",
+  },
+  questionText: {
+    fontSize: "15px",
+    color: "#111",
+    whiteSpace: "pre-wrap",
+  },
   responseLabel: {
     fontWeight: "600",
     marginBottom: "12px",
@@ -194,7 +202,7 @@ questionText: {
     lineHeight: "1.6",
     color: "#333",
     marginBottom: "12px",
-    whiteSpace: "pre-wrap", // ✅ 줄바꿈 자연스럽게
+    whiteSpace: "pre-wrap",
   },
   buttonGroup: {
     display: "flex",
