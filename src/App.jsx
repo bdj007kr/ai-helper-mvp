@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const FOLLOW_UPS = [
   { label: "💡 빠져나갈 구멍은 없을까?", prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?" },
   { label: "📚 비슷한 사건 더 알려줘", prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘." },
+  { label: "⚖️ 변호사 추천해줘", prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?" }
 ];
 
 const App = () => {
@@ -21,7 +22,7 @@ const App = () => {
 
   const handleSubmit = async (input) => {
     const content = input || userInput;
-    if (!content.trim() || isLoading) return;
+    if (!content.trim()) return;
     setIsLoading(true);
     setUserInput("");
 
@@ -30,11 +31,11 @@ const App = () => {
     const messages = [...history, { role: "user", content }];
 
     try {
-      const response = await fetch("https://ai-helper-mvp.onrender.com/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_input: content, context: initialQuestion })
-      });
+      const response = await fetch("https://ai-helper-api-2025.onrender.com/chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ user_input: content, context: initialQuestion })
+});
       const data = await response.json();
       let index = 0;
       setAiResponse("");
@@ -62,10 +63,10 @@ const App = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>🧠 법률 AI 4</h1>
+      <h1 style={styles.title}>⚖️ 법률 상담 도우미</h1>
 
       <textarea
-        placeholder="자세히 이야기할수록 더 정확한 조언을 받을 수 있어요"
+        placeholder="당한 상황이나 궁금한 점을 자세히 적어주세요"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
         rows={4}
@@ -82,23 +83,10 @@ const App = () => {
           <p style={styles.responseText}>{aiResponse}</p>
           <div style={styles.buttonGroup}>
             {FOLLOW_UPS.map(({ label, prompt }, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSubmit(prompt)}
-                disabled={isLoading}
-                style={{ ...styles.followUpButton, opacity: isLoading ? 0.6 : 1 }}
-              >
+              <button key={idx} onClick={() => handleSubmit(prompt)} style={styles.followUpButton}>
                 {label}
               </button>
             ))}
-            <a
-              href="http://korea-lawyer.com/new_html_file.php?file=new_member_ranking.html&file2=new_default_member_ranking.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.externalLinkButton}
-            >
-              👩‍⚖️ 변호사 쉽게 모아보기
-            </a>
           </div>
         </div>
       )}
@@ -115,29 +103,36 @@ const App = () => {
 const styles = {
   container: {
     minHeight: "100vh",
-    backgroundColor: "#f9fafb",
+    backgroundColor: "#ffffff", // 배경 흰색
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "flex-start",
     padding: "24px 16px",
-    fontFamily: "'Noto Sans KR', sans-serif",
+    fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
+
+    // ✅ 추가된 항목들
+    width: "100vw",
+    maxWidth: "100vw",
+    overflowX: "hidden",
+    boxSizing: "border-box",
   },
   title: {
     fontSize: "22px",
     fontWeight: "700",
     marginBottom: "20px",
-    color: "#1f2937",
+    color: "#222",
   },
   textarea: {
     width: "100%",
-    maxWidth: "500px",
+    maxWidth: "94vw",
     padding: "16px",
     fontSize: "15px",
     borderRadius: "12px",
     border: "1px solid #ccc",
     marginBottom: "16px",
     backgroundColor: "#fff",
-    color: "#111",
+    color: "#222",
     resize: "vertical",
     boxSizing: "border-box",
     fontFamily: "inherit",
@@ -150,65 +145,51 @@ const styles = {
     border: "none",
     borderRadius: "12px",
     cursor: "pointer",
+    transition: "0.2s ease",
     marginBottom: "24px",
-    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
-    transition: "opacity 0.3s ease",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   },
   responseBox: {
-    backgroundColor: "#ffffff",
-    border: "1px solid #e5e7eb",
-    borderRadius: "16px",
-    padding: "20px",
-    maxWidth: "500px",
+    backgroundColor: "#fff",
+    border: "1px solid #e0e0e0",
+    borderRadius: "12px",
+    padding: "18px",
+    maxWidth: "94vw",
     width: "100%",
+    margin: "0 auto", // ✅ 가운데 정렬 추가
     boxSizing: "border-box",
-    marginBottom: "16px",
-    whiteSpace: "pre-wrap",
   },
   responseLabel: {
     fontWeight: "600",
     marginBottom: "12px",
-    fontSize: "16px",
-    color: "#111827",
+    color: "#1e1e1e",
   },
   responseText: {
     fontSize: "15px",
-    lineHeight: "1.7",
+    lineHeight: "1.6",
     color: "#333",
     marginBottom: "12px",
+    whiteSpace: "pre-wrap", // ✅ 줄바꿈 자연스럽게
   },
   buttonGroup: {
     display: "flex",
     flexDirection: "column",
-    gap: "12px",
+    gap: "10px",
   },
   followUpButton: {
-    padding: "12px 16px",
+    padding: "10px 14px",
     backgroundColor: "#f3f4f6",
     border: "1px solid #ddd",
-    borderRadius: "12px",
-    fontSize: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
     cursor: "pointer",
     textAlign: "left",
     color: "#111",
-    boxShadow: "inset 0 1px 0 #fff",
-    transition: "opacity 0.3s ease",
-  },
-  externalLinkButton: {
-    padding: "12px 16px",
-    backgroundColor: "#dbeafe",
-    border: "1px solid #93c5fd",
-    borderRadius: "12px",
-    fontSize: "15px",
-    textAlign: "center",
-    textDecoration: "none",
-    color: "#1d4ed8",
-    fontWeight: "600",
   },
   resetButton: {
     marginTop: "20px",
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#666",
     backgroundColor: "transparent",
     border: "none",
     textDecoration: "underline",
