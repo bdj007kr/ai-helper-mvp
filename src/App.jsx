@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const FOLLOW_UPS = [
-  { label: "💡 빠진아가가루머은 없을까?", prompt: "이 상황에서 허의를 피할 수 있는 전력이 있을까요?" },
-  { label: "💰 AI 추천 합의금", prompt: "이 사건에서 합의금은 어느 정도가 적적할까요?" },
+  { label: "💡 빠져나갈 구멍은 없을까?", prompt: "이 상황에서 혐의를 피할 수 있는 전략이 있을까요?" },
+  { label: "💰 AI 추천 합의금", prompt: "이 형사사건에서 합의금은 어느 정도가 적절할까요?" },
   { label: "📚 비슷한 사건 더 알려줘", prompt: "비슷한 사건의 실제 판례를 3개 더 알려줘요." },
-  { label: "⚖️ 변호사 추천해줘", prompt: "이러한 사건을 잘 다룰 수 있는 변호사 유형은 어느가요?" }
+  { label: "⚖️ 변호사 추천해줘", prompt: "이런 사건을 잘 다루는 변호사 유형은 어떤가요?" }
 ];
 
 const App = () => {
@@ -18,13 +18,20 @@ const App = () => {
   });
 
   const typingIntervalRef = useRef(null);
+  const responseEndRef = useRef(null); // ✅ 스크롤용 ref
 
   useEffect(() => {
     sessionStorage.setItem("chatHistory", JSON.stringify(history));
   }, [history]);
 
+  useEffect(() => {
+    if (responseEndRef.current) {
+      responseEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [aiResponse]);
+
   const handleSubmit = async (input) => {
-    if (isLoading) return; // 연타 방지
+    if (isLoading) return;
 
     if (typingIntervalRef.current) {
       clearInterval(typingIntervalRef.current);
@@ -48,7 +55,7 @@ const App = () => {
       });
       const data = await response.json();
       let index = 0;
-      const fullResponse = "" + data.response; // 첫줄자 없음 해결용
+      const fullResponse = "💬 " + data.response; // ✅ 첫 글자 보장용
       setAiResponse("");
 
       typingIntervalRef.current = setInterval(() => {
@@ -69,6 +76,13 @@ const App = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   const resetConversation = () => {
     setInitialQuestion(null);
     setHistory([]);
@@ -83,6 +97,7 @@ const App = () => {
         placeholder="당한 상황이나 궁금한 점을 자세히 적어주세요"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
+        onKeyDown={handleKeyDown}
         rows={4}
         style={styles.textarea}
       />
@@ -127,6 +142,7 @@ const App = () => {
               </button>
             ))}
           </div>
+          <div ref={responseEndRef} /> {/* ✅ 스크롤 포인트 */}
         </div>
       )}
 
@@ -147,7 +163,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: "24px 16px",
+    padding: "24px 16px 60px", // ✅ 하단 여백 확보
     fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
     width: "100vw",
     maxWidth: "100vw",
